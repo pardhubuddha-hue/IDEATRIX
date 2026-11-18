@@ -1,13 +1,11 @@
 {
-  "background_color": "#ed0f0f",
-  "description": "IDEATRIX - Ideas Into Impact\nIDEATRIX is an all-in-one AI innovation platform that helps users learn, create projects, solve problems, and turn ideas into impact.",
-  "dir": "ltr",
-  "display": "standalone",
+  "id": "ideatrix",
   "name": "IDEATRIX",
-  "orientation": "any",
-  "scope": "/",
   "short_name": "IDEATRIX",
-  "start_url": "/",
-  "theme_color": "#7381d2",
-  "id": "ideatrix"
+  "description": "IDEATRIX is an all-in-one AI innovation platform that helps users learn, create projects, solve problems, and turn ideas into impact.",
+  "start_url": "/IDEATRIX/",
+  "scope": "/IDEATRIX/",
+  "display": "standalone",
+  "background_color": "#071426",
+  "theme_color": "#087cff"
 }
