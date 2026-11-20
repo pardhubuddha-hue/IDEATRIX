@@ -220,3 +220,447 @@ if('serviceWorker' in navigator){
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d20">
+<meta name="description" content="IDEATRIX - Think, Create, Innovate.">
+<link rel="manifest" href="/IDEATRIX/manifest.json">
+<title>IDEATRIX – Ideas Into Impact</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d20;color:white;font-family:Arial,sans-serif}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:#101a35;border-bottom:1px solid #263b68;position:sticky;top:0;z-index:5}
+.logo{font-size:27px;font-weight:bold;color:#54c9ff}
+.logo span{color:#a78bfa}
+nav{display:flex;gap:12px;flex-wrap:wrap}
+nav button{background:transparent;border:0;color:#cbd8f5;cursor:pointer;padding:8px}
+nav button:hover{color:#55caff}
+.hero{padding:55px 6% 35px;background:radial-gradient(ellipse at top right,#263d83,#101a39 48%,#080d20)}
+.hero h1{font-size:36px;margin:0 0 10px}
+.hero h1 span{color:#55caff}
+.hero p{color:#b8c8e8}
+.search{width:100%;max-width:550px;padding:15px;border-radius:12px;border:1px solid #4264a0;background:#101d39;color:white;margin-top:15px;outline:none}
+main{max-width:1200px;margin:auto;padding:25px 6%}
+.section-title{font-size:23px;margin:25px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px}
+.card{background:linear-gradient(145deg,#17294b,#10182e);border:1px solid #2b4776;border-radius:17px;padding:23px;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#56caff;box-shadow:0 8px 30px #163b7555}
+.icon{font-size:32px}
+.card h3{color:#65caff;margin-bottom:9px}
+.card p{color:#b8c7df;line-height:1.5;font-size:14px}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.quick button{padding:17px 8px;background:#152342;color:white;border:1px solid #314b79;border-radius:12px;cursor:pointer}
+.quick button:hover{border-color:#55caff}
+.pro{margin-top:30px;padding:25px;border-radius:17px;background:linear-gradient(110deg,#263d83,#4b287d)}
+.pro p{color:#e1e5ff}
+.pro button,.action{background:#62caff;color:#071426;border:0;padding:12px 20px;border-radius:9px;font-weight:bold;cursor:pointer}
+.updates{background:#111d37;padding:20px;border-radius:15px;border:1px solid #263c65}
+.updates p{color:#c5d3ed}
+footer{text-align:center;padding:30px;color:#8296b9;border-top:1px solid #253657;margin-top:35px}
+.page{display:none}
+.page.active{display:block}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:center;justify-content:center;padding:20px}
+.modal-box{width:100%;max-width:500px;background:#142343;border:1px solid #55caff;border-radius:17px;padding:25px}
+.modal-box p{color:#c6d4ec;line-height:1.6}
+.close{float:right;background:transparent;color:white;border:0;font-size:22px;cursor:pointer}
+.item{padding:15px;margin:10px 0;background:#1b2d50;border-radius:10px;color:#dce8ff}
+
+/* Startup advertisement */
+#adOverlay{position:fixed;inset:0;z-index:9999;background:rgba(3,8,25,.97);display:flex;align-items:center;justify-content:center;padding:20px}
+#adBox{background:linear-gradient(135deg,#172c55,#38266b);border:1px solid #55caff;border-radius:20px;padding:35px 25px;text-align:center;max-width:420px;width:100%;color:white}
+#adBox p{color:#e0e8ff}
+#adTimer{color:#55caff;font-weight:bold}
+@media(max-width:600px){header{padding:17px 5%;flex-direction:column;align-items:flex-start}.hero h1{font-size:29px}nav{gap:8px}}
+</style>
+</head>
+
+<body>
+
+<!-- ONE-TIME STARTUP AD -->
+<div id="adOverlay">
+ <div id="adBox">
+  <h2>📢 Advertisement</h2>
+  <p>Your advertisement content goes here.</p>
+  <p id="adTimer">Closing in 5 seconds...</p>
+ </div>
+</div>
+
+<header>
+ <div class="logo">IDEA<span>TRIX</span></div>
+ <nav>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('history')">History</button>
+  <button onclick="showPage('saved')">Saved</button>
+  <button onclick="showPage('community')">Community</button>
+  <button onclick="showPage('settings')">Settings</button>
+ </nav>
+</header>
+
+<section class="hero">
+ <h1>Welcome to <span>IDEATRIX</span></h1>
+ <p>Think. Create. Innovate. Turn your ideas into impact.</p>
+ <input class="search" id="search" placeholder="Search IDEATRIX features..." oninput="searchCards()">
+</section>
+
+<main>
+<div id="home" class="page active">
+ <h2 class="section-title">Your Innovation Dashboard</h2>
+
+ <div class="grid" id="hubs">
+  <div class="card" onclick="openHub('Chat & Fun')">
+   <div class="icon">💬</div><h3>Chat & Fun</h3>
+   <p>AI Chat, stories, jokes, riddles, puzzles, quizzes and language practice.</p>
+  </div>
+  <div class="card" onclick="openHub('Study Hub')">
+   <div class="icon">🎓</div><h3>Study Hub</h3>
+   <p>AI tutor, homework helper, maths solver, notes, exam preparation, flashcards and coding.</p>
+  </div>
+  <div class="card" onclick="openHub('Office Hub')">
+   <div class="icon">💼</div><h3>Office Hub</h3>
+   <p>Document creator, PDF tools, presentation maker, resume maker, projects and task manager.</p>
+  </div>
+  <div class="card" onclick="openHub('Random AI')">
+   <div class="icon">🚀</div><h3>Random AI</h3>
+   <p>AI image, video and voice generators, logo designer, idea generator and innovation assistant.</p>
+  </div>
+ </div>
+
+ <h2 class="section-title">⚡ Quick Access</h2>
+ <div class="quick">
+  <button onclick="openHub('AI Chat')">💬 AI Chat</button>
+  <button onclick="openHub('AI Images')">🎨 AI Images</button>
+  <button onclick="openHub('My Projects')">📁 My Projects</button>
+  <button onclick="openHub('AI Tutor')">📚 AI Tutor</button>
+  <button onclick="openHub('Voice Assistant')">🎙️ Voice AI</button>
+  <button onclick="openHub('Idea Generator')">💡 Ideas</button>
+ </div>
+
+ <div class="pro">
+  <h2>✨ IDEATRIX Pro</h2>
+  <p>Discover advanced creative tools and future possibilities.</p>
+  <button onclick="openHub('IDEATRIX Pro')">Explore Pro</button>
+ </div>
+
+ <h2 class="section-title">🔔 Latest Updates</h2>
+ <div class="updates">
+  <p>🚀 Welcome to the new IDEATRIX dashboard.</p>
+  <p>💡 Explore the four innovation hubs.</p>
+  <p>🎓 Learn, create and develop new ideas.</p>
+ </div>
+</div>
+
+<div id="history" class="page">
+ <h2 class="section-title">🕘 Your History</h2>
+ <div class="item">Your recent activity will appear here when activity storage is connected.</div>
+</div>
+
+<div id="saved" class="page">
+ <h2 class="section-title">⭐ Saved Items</h2>
+ <div class="item">Your saved projects, pictures and documents will appear here.</div>
+</div>
+
+<div id="community" class="page">
+ <h2 class="section-title">🌍 IDEATRIX Community</h2>
+ <div class="item">Share ideas, discover projects and connect with creators.</div>
+ <div class="item">Community features need a connected backend.</div>
+</div>
+
+<div id="settings" class="page">
+ <h2 class="section-title">⚙️ Settings</h2>
+ <div class="item">👤 Personal Profile</div>
+ <div class="item">🌐 English, Telugu, Hindi, Tamil, Kannada, Malayalam and more.</div>
+ <div class="item">🎙️ Voice input and spoken AI replies</div>
+ <div class="item">🔒 Privacy and Security</div>
+ <div class="item">♿ Accessibility</div>
+ <div class="item">🔔 Notifications</div>
+ <div class="item">🎨 Personalization</div>
+ <div class="item">🤝 Collaboration and Academy</div>
+ <div class="item">📊 Analytics and Marketplace</div>
+</div>
+</main>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <button class="close" onclick="closeModal()">×</button>
+  <h2 id="modalTitle">IDEATRIX</h2>
+  <p id="modalText"></p>
+  <button class="action" onclick="closeModal()">Continue</button>
+ </div>
+</div>
+
+<footer>
+ IDEATRIX © 2026 | Ideas Into Impact
+ <p>Think. Create. Innovate.</p>
+</footer>
+
+<script>
+// Show the startup ad once per browser visit.
+// It closes automatically after 5 seconds.
+(function(){
+ const ad=document.getElementById('adOverlay');
+ const timer=document.getElementById('adTimer');
+ let seconds=5;
+ const countdown=setInterval(function(){
+  seconds--;
+  timer.textContent="Closing in "+seconds+" seconds...";
+  if(seconds<=0){
+   clearInterval(countdown);
+   ad.remove();
+  }
+ },1000);
+})();
+
+function showPage(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(page).classList.add('active');
+ window.scrollTo(0,0);
+}
+function openHub(name){
+ document.getElementById('modalTitle').innerText=name;
+ document.getElementById('modalText').innerText=
+ name+' is part of IDEATRIX. Its actual AI tools and services will be connected in a future development stage.';
+ document.getElementById('modal').style.display='flex';
+}
+function closeModal(){
+ document.getElementById('modal').style.display='none';
+}
+function searchCards(){
+ let q=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('#hubs .card').forEach(card=>{
+  card.style.display=card.innerText.toLowerCase().includes(q)?'block':'none';
+ });
+}
+if('serviceWorker' in navigator){
+ navigator.serviceWorker.register('/IDEATRIX/sw.js').catch(()=>{});
+}
+</script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d20">
+<meta name="description" content="IDEATRIX - Think, Create, Innovate.">
+<link rel="manifest" href="/IDEATRIX/manifest.json">
+<title>IDEATRIX – Ideas Into Impact</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d20;color:white;font-family:Arial,sans-serif}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:#101a35;border-bottom:1px solid #263b68;position:sticky;top:0;z-index:5}
+.logo{font-size:27px;font-weight:bold;color:#54c9ff}
+.logo span{color:#a78bfa}
+nav{display:flex;gap:12px;flex-wrap:wrap}
+nav button{background:transparent;border:0;color:#cbd8f5;cursor:pointer;padding:8px}
+nav button:hover{color:#55caff}
+.hero{padding:55px 6% 35px;background:radial-gradient(ellipse at top right,#263d83,#101a39 48%,#080d20)}
+.hero h1{font-size:36px;margin:0 0 10px}
+.hero h1 span{color:#55caff}
+.hero p{color:#b8c8e8}
+.search{width:100%;max-width:550px;padding:15px;border-radius:12px;border:1px solid #4264a0;background:#101d39;color:white;margin-top:15px;outline:none}
+main{max-width:1200px;margin:auto;padding:25px 6%}
+.section-title{font-size:23px;margin:25px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px}
+.card{background:linear-gradient(145deg,#17294b,#10182e);border:1px solid #2b4776;border-radius:17px;padding:23px;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#56caff;box-shadow:0 8px 30px #163b7555}
+.icon{font-size:32px}
+.card h3{color:#65caff;margin-bottom:9px}
+.card p{color:#b8c7df;line-height:1.5;font-size:14px}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.quick button{padding:17px 8px;background:#152342;color:white;border:1px solid #314b79;border-radius:12px;cursor:pointer}
+.quick button:hover{border-color:#55caff}
+.pro{margin-top:30px;padding:25px;border-radius:17px;background:linear-gradient(110deg,#263d83,#4b287d)}
+.pro p{color:#e1e5ff}
+.pro button,.action{background:#62caff;color:#071426;border:0;padding:12px 20px;border-radius:9px;font-weight:bold;cursor:pointer}
+.updates{background:#111d37;padding:20px;border-radius:15px;border:1px solid #263c65}
+.updates p{color:#c5d3ed}
+footer{text-align:center;padding:30px;color:#8296b9;border-top:1px solid #253657;margin-top:35px}
+.page{display:none}
+.page.active{display:block}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:center;justify-content:center;padding:20px}
+.modal-box{width:100%;max-width:500px;background:#142343;border:1px solid #55caff;border-radius:17px;padding:25px}
+.modal-box p{color:#c6d4ec;line-height:1.6}
+.close{float:right;background:transparent;color:white;border:0;font-size:22px;cursor:pointer}
+.item{padding:15px;margin:10px 0;background:#1b2d50;border-radius:10px;color:#dce8ff}
+
+/* Startup advertisement */
+#adOverlay{position:fixed;inset:0;z-index:9999;background:rgba(3,8,25,.97);display:flex;align-items:center;justify-content:center;padding:20px}
+#adBox{background:linear-gradient(135deg,#172c55,#38266b);border:1px solid #55caff;border-radius:20px;padding:35px 25px;text-align:center;max-width:420px;width:100%;color:white}
+#adBox p{color:#e0e8ff}
+#adTimer{color:#55caff;font-weight:bold}
+@media(max-width:600px){header{padding:17px 5%;flex-direction:column;align-items:flex-start}.hero h1{font-size:29px}nav{gap:8px}}
+</style>
+</head>
+
+<body>
+
+<!-- ONE-TIME STARTUP AD -->
+<div id="adOverlay">
+ <div id="adBox">
+  <h2>📢 Advertisement</h2>
+  <p>Your advertisement content goes here.</p>
+  <p id="adTimer">Closing in 5 seconds...</p>
+ </div>
+</div>
+
+<header>
+ <div class="logo">IDEA<span>TRIX</span></div>
+ <nav>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('history')">History</button>
+  <button onclick="showPage('saved')">Saved</button>
+  <button onclick="showPage('community')">Community</button>
+  <button onclick="showPage('settings')">Settings</button>
+ </nav>
+</header>
+
+<section class="hero">
+ <h1>Welcome to <span>IDEATRIX</span></h1>
+ <p>Think. Create. Innovate. Turn your ideas into impact.</p>
+ <input class="search" id="search" placeholder="Search IDEATRIX features..." oninput="searchCards()">
+</section>
+
+<main>
+<div id="home" class="page active">
+ <h2 class="section-title">Your Innovation Dashboard</h2>
+
+ <div class="grid" id="hubs">
+  <div class="card" onclick="openHub('Chat & Fun')">
+   <div class="icon">💬</div><h3>Chat & Fun</h3>
+   <p>AI Chat, stories, jokes, riddles, puzzles, quizzes and language practice.</p>
+  </div>
+  <div class="card" onclick="openHub('Study Hub')">
+   <div class="icon">🎓</div><h3>Study Hub</h3>
+   <p>AI tutor, homework helper, maths solver, notes, exam preparation, flashcards and coding.</p>
+  </div>
+  <div class="card" onclick="openHub('Office Hub')">
+   <div class="icon">💼</div><h3>Office Hub</h3>
+   <p>Document creator, PDF tools, presentation maker, resume maker, projects and task manager.</p>
+  </div>
+  <div class="card" onclick="openHub('Random AI')">
+   <div class="icon">🚀</div><h3>Random AI</h3>
+   <p>AI image, video and voice generators, logo designer, idea generator and innovation assistant.</p>
+  </div>
+ </div>
+
+ <h2 class="section-title">⚡ Quick Access</h2>
+ <div class="quick">
+  <button onclick="openHub('AI Chat')">💬 AI Chat</button>
+  <button onclick="openHub('AI Images')">🎨 AI Images</button>
+  <button onclick="openHub('My Projects')">📁 My Projects</button>
+  <button onclick="openHub('AI Tutor')">📚 AI Tutor</button>
+  <button onclick="openHub('Voice Assistant')">🎙️ Voice AI</button>
+  <button onclick="openHub('Idea Generator')">💡 Ideas</button>
+ </div>
+
+ <div class="pro">
+  <h2>✨ IDEATRIX Pro</h2>
+  <p>Discover advanced creative tools and future possibilities.</p>
+  <button onclick="openHub('IDEATRIX Pro')">Explore Pro</button>
+ </div>
+
+ <h2 class="section-title">🔔 Latest Updates</h2>
+ <div class="updates">
+  <p>🚀 Welcome to the new IDEATRIX dashboard.</p>
+  <p>💡 Explore the four innovation hubs.</p>
+  <p>🎓 Learn, create and develop new ideas.</p>
+ </div>
+</div>
+
+<div id="history" class="page">
+ <h2 class="section-title">🕘 Your History</h2>
+ <div class="item">Your recent activity will appear here when activity storage is connected.</div>
+</div>
+
+<div id="saved" class="page">
+ <h2 class="section-title">⭐ Saved Items</h2>
+ <div class="item">Your saved projects, pictures and documents will appear here.</div>
+</div>
+
+<div id="community" class="page">
+ <h2 class="section-title">🌍 IDEATRIX Community</h2>
+ <div class="item">Share ideas, discover projects and connect with creators.</div>
+ <div class="item">Community features need a connected backend.</div>
+</div>
+
+<div id="settings" class="page">
+ <h2 class="section-title">⚙️ Settings</h2>
+ <div class="item">👤 Personal Profile</div>
+ <div class="item">🌐 English, Telugu, Hindi, Tamil, Kannada, Malayalam and more.</div>
+ <div class="item">🎙️ Voice input and spoken AI replies</div>
+ <div class="item">🔒 Privacy and Security</div>
+ <div class="item">♿ Accessibility</div>
+ <div class="item">🔔 Notifications</div>
+ <div class="item">🎨 Personalization</div>
+ <div class="item">🤝 Collaboration and Academy</div>
+ <div class="item">📊 Analytics and Marketplace</div>
+</div>
+</main>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <button class="close" onclick="closeModal()">×</button>
+  <h2 id="modalTitle">IDEATRIX</h2>
+  <p id="modalText"></p>
+  <button class="action" onclick="closeModal()">Continue</button>
+ </div>
+</div>
+
+<footer>
+ IDEATRIX © 2026 | Ideas Into Impact
+ <p>Think. Create. Innovate.</p>
+</footer>
+
+<script>
+// Show the startup ad once per browser visit.
+// It closes automatically after 5 seconds.
+(function(){
+ const ad=document.getElementById('adOverlay');
+ const timer=document.getElementById('adTimer');
+ let seconds=5;
+ const countdown=setInterval(function(){
+  seconds--;
+  timer.textContent="Closing in "+seconds+" seconds...";
+  if(seconds<=0){
+   clearInterval(countdown);
+   ad.remove();
+  }
+ },1000);
+})();
+
+function showPage(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(page).classList.add('active');
+ window.scrollTo(0,0);
+}
+function openHub(name){
+ document.getElementById('modalTitle').innerText=name;
+ document.getElementById('modalText').innerText=
+ name+' is part of IDEATRIX. Its actual AI tools and services will be connected in a future development stage.';
+ document.getElementById('modal').style.display='flex';
+}
+function closeModal(){
+ document.getElementById('modal').style.display='none';
+}
+function searchCards(){
+ let q=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('#hubs .card').forEach(card=>{
+  card.style.display=card.innerText.toLowerCase().includes(q)?'block':'none';
+ });
+}
+if('serviceWorker' in navigator){
+ navigator.serviceWorker.register('/IDEATRIX/sw.js').catch(()=>{});
+}
+</script>
+
+</body>
+</html>
